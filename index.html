@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Завдання №1 і №2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+        }
+        section {
+            margin-bottom: 50px;
+        }
+        form {
+            width: 300px;
+            margin: 0 auto;
+        }
+        input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+        .error {
+            border: 2px solid red;
+        }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        td {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            border: 1px solid black;
+            cursor: pointer;
+        }
+        input[type="color"] {
+            margin: 20px auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Завдання 1 -->
+    <section>
+        <h1>Форма перевірки даних (Завдання №1)</h1>
+        <form id="myForm">
+            <label for="name">ПІБ:</label>
+            <input type="text" id="name" name="name" placeholder="ТТТТТТ Т.Т.">
+
+            <label for="phone">Телефон:</label>
+            <input type="text" id="phone" name="phone" placeholder="(ЧЧЧ)-ЧЧЧ-ЧЧ-ЧЧ">
+
+            <label for="idCard">ID-card:</label>
+            <input type="text" id="idCard" name="idCard" placeholder="ТТ №ЧЧЧЧЧЧ">
+
+            <label for="faculty">Факультет:</label>
+            <input type="text" id="faculty" name="faculty" placeholder="ТТТТ">
+
+            <label for="dob">Дата народження:</label>
+            <input type="text" id="dob" name="dob" placeholder="ЧЧ.ЧЧ.ЧЧЧЧ">
+
+            <button type="submit">Відправити</button>
+        </form>
+    </section>
+
+    <!-- Завдання 2 -->
+    <section>
+        <h1>Таблиця 6x6 (Завдання №2)</h1>
+        <input type="color" id="colorPicker" value="#ff0000" title="Виберіть колір">
+        <table id="myTable"></table>
+    </section>
+
+    <script>
+        // Завдання №1: Перевірка форми
+        document.getElementById('myForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => input.classList.remove('error'));
+
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const idCard = document.getElementById('idCard').value;
+            const faculty = document.getElementById('faculty').value;
+            const dob = document.getElementById('dob').value;
+
+            const namePattern = /^[А-ЯІЇЄҐа-яіїєґ]+\s[А-ЯІЇЄҐа-яіїєґ]\.\s?[А-ЯІЇЄҐа-яіїєґ]\.?$/;
+            const phonePattern = /^\(\d{3}\)-\d{3}-\d{2}-\d{2}$/;
+            const idCardPattern = /^[А-ЯІЇЄҐ]{2}\s№\d{6}$/;
+            const facultyPattern = /^[А-ЯІЇЄҐа-яіїєґ]+$/;
+            const dobPattern = /^\d{2}\.\d{2}\.\d{4}$/;
+
+            let isValid = true;
+
+            if (!namePattern.test(name)) {
+                document.getElementById('name').classList.add('error');
+                isValid = false;
+            }
+            if (!phonePattern.test(phone)) {
+                document.getElementById('phone').classList.add('error');
+                isValid = false;
+            }
+            if (!idCardPattern.test(idCard)) {
+                document.getElementById('idCard').classList.add('error');
+                isValid = false;
+            }
+            if (!facultyPattern.test(faculty)) {
+                document.getElementById('faculty').classList.add('error');
+                isValid = false;
+            }
+            if (!dobPattern.test(dob)) {
+                document.getElementById('dob').classList.add('error');
+                isValid = false;
+            }
+
+            if (isValid) {
+                window.open('', '_blank').document.write(`
+                    <h2>Введені дані:</h2>
+                    <p><strong>ПІБ:</strong> ${name}</p>
+                    <p><strong>Телефон:</strong> ${phone}</p>
+                    <p><strong>ID-card:</strong> ${idCard}</p>
+                    <p><strong>Факультет:</strong> ${faculty}</p>
+                    <p><strong>Дата народження:</strong> ${dob}</p>
+                `);
+            }
+        });
+
+        // Завдання №2: Таблиця 6x6
+        const table = document.getElementById('myTable');
+        const colorPicker = document.getElementById('colorPicker');
+        const variantNumber = 3; // Варіант №3
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        let number = 1;
+        for (let row = 0; row < 6; row++) {
+            const tr = document.createElement('tr');
+            for (let col = 0; col < 6; col++) {
+                const td = document.createElement('td');
+                td.textContent = number;
+
+                if (number === variantNumber) {
+                    td.addEventListener('mouseover', () => {
+                        td.style.backgroundColor = getRandomColor();
+                    });
+
+                    td.addEventListener('click', () => {
+                        td.style.backgroundColor = colorPicker.value;
+                    });
+
+                    td.addEventListener('dblclick', () => {
+                        for (let i = 0; i < 6; i++) {
+                            table.rows[i].cells[i].style.backgroundColor = colorPicker.value;
+                        }
+                    });
+                }
+
+                tr.appendChild(td);
+                number++;
+            }
+            table.appendChild(tr);
+        }
+    </script>
+
+</body>
+</html>
